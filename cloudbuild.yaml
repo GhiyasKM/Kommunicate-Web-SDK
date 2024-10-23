@@ -1,5 +1,5 @@
 options:
-  logging: 'CLOUD_LOGGING_ONLY'  # Use this if you want to send logs to Cloud Logging only
+  logging: 'CLOUD_LOGGING_ONLY'  # Use this to send logs to Cloud Logging only
 
 steps:
   # Step 1: Install dependencies
@@ -12,16 +12,16 @@ steps:
     args:
       - '-c'
       - |
-        if [ "${BUILD_ENV}" = "test" ]; then npm run build-test; fi
-        if [ "${BUILD_ENV}" = "release" ]; then npm run build-release; fi
-        if [ "${BUILD_ENV}" = "staging" ]; then npm run build-staging; fi
-        if [ "${BUILD_ENV}" = "prod-beta" ]; then npm run build-beta; fi
-        if [ "${BUILD_ENV}" = "prod" ]; then npm run build-prod; fi
-        if [ "${BUILD_ENV}" = "prod-enterprise" ]; then npm run build-prod-enterprise; fi
-        if [ "${BUILD_ENV}" = "prod-in" ]; then npm run build-prod-in; fi
-        if [ "${BUILD_ENV}" = "prod-eu" ]; then npm run build-prod-eu; fi
-        if [ "${BUILD_ENV}" = "prod-cn" ]; then npm run build-prod-cn; fi
-        if [ -z "${BUILD_ENV}" ]; then npm run build-test; fi
+        if [ "${_BUILD_ENV}" = "test" ]; then npm run build-test; fi
+        if [ "${_BUILD_ENV}" = "release" ]; then npm run build-release; fi
+        if [ "${_BUILD_ENV}" = "staging" ]; then npm run build-staging; fi
+        if [ "${_BUILD_ENV}" = "prod-beta" ]; then npm run build-beta; fi
+        if [ "${_BUILD_ENV}" = "prod" ]; then npm run build-prod; fi
+        if [ "${_BUILD_ENV}" = "prod-enterprise" ]; then npm run build-prod-enterprise; fi
+        if [ "${_BUILD_ENV}" = "prod-in" ]; then npm run build-prod-in; fi
+        if [ "${_BUILD_ENV}" = "prod-eu" ]; then npm run build-prod-eu; fi
+        if [ "${_BUILD_ENV}" = "prod-cn" ]; then npm run build-prod-cn; fi
+        if [ -z "${_BUILD_ENV}" ]; then npm run build-test; fi
 
 # Specify the available environment variables
 substitutions:
