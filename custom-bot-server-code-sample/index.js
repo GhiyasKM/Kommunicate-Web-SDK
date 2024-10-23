@@ -14,7 +14,7 @@ app.post('/', (req, res) => {
     //When you get the response send it back to Kommunicate in response object. the request timeout is 30 sec.
     console.log(req.body);
 
-    //you can create the response dynamically using data from your db / custom-bot / etc..
+    //you can create the response dynamically using data from your db / 
     //please note the format of the response. You can find more info about the format here: https://docs.kommunicate.io/docs/bot-custom-integration
     let response = [
         {
