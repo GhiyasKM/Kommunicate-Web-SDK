@@ -1,5 +1,5 @@
 options:
-  logs_bucket: 'gs://cloudbuild-logs-testing'  # Replace with your actual logs bucket name
+  logging: 'CLOUD_LOGGING_ONLY'  # Use this if you want to send logs to Cloud Logging only
 
 steps:
   # Step 1: Install dependencies
