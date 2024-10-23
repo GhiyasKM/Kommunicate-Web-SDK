@@ -29,5 +29,8 @@ steps:
         fi
 
   # Step 3: Deploy to Firebase Hosting
-  - name: 'gcr.io/cloud-builders/firebase'
+  - name: 'gcr.io/$PROJECT_ID/firebase'
     args: ['deploy', '--only', 'hosting', '--token', '${_FIREBASE_TOKEN}']
+
+
+    
