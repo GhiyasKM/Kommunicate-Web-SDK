@@ -1,3 +1,6 @@
+options:
+  logging: CLOUD_LOGGING_ONLY  # This will send logs to Cloud Logging instead of a bucket.
+
 steps:
   # Step 1: Install dependencies
   - name: 'gcr.io/cloud-builders/npm'
@@ -26,12 +29,4 @@ steps:
   - name: 'gcr.io/cloud-builders/firebase'
     args: ['deploy', '--only', 'hosting', '--token', '${_FIREBASE_TOKEN}']
 
-artifacts:
-  # Specify the directory where your build outputs are located
-  objects:
-    location: 'webplugin/build'  # Same as your AWS Amplify baseDirectory
-    paths: ['**/*']
-
-# Set the Firebase token as a substitution (either in the Cloud Console or .env)
-substitutions:
-  _FIREBASE_TOKEN: '${FIREBASE_TOKEN}'
+# Substitutions for Firebase Token is already set in Cloud Build Console.
