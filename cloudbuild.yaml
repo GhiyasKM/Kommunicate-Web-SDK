@@ -31,6 +31,10 @@ steps:
       - --project
       - "${_FIREBASE_PROJECT_ID}"  # Use Firebase project ID
 
+# Set the default logging behavior
+options:
+  logging: CLOUD_LOGGING_ONLY  # Use Cloud Logging only
+
 # Define environment variables for substitutions
 substitutions:
   _BUILD_ENV: 'test'  # Default environment, change as needed
