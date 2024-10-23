@@ -1,33 +1,42 @@
-options:
-  logging: 'CLOUD_LOGGING_ONLY'  # Use this to send logs to Cloud Logging only
-
 steps:
   # Step 1: Install dependencies
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
 
-  # Step 2: Build based on the provided environment variable
+  # Step 2: Build the project based on the environment variable
   - name: 'gcr.io/cloud-builders/npm'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [ "${_BUILD_ENV}" = "test" ]; then npm run build-test; fi
-        if [ "${_BUILD_ENV}" = "release" ]; then npm run build-release; fi
-        if [ "${_BUILD_ENV}" = "staging" ]; then npm run build-staging; fi
-        if [ "${_BUILD_ENV}" = "prod-beta" ]; then npm run build-beta; fi
-        if [ "${_BUILD_ENV}" = "prod" ]; then npm run build-prod; fi
-        if [ "${_BUILD_ENV}" = "prod-enterprise" ]; then npm run build-prod-enterprise; fi
-        if [ "${_BUILD_ENV}" = "prod-in" ]; then npm run build-prod-in; fi
-        if [ "${_BUILD_ENV}" = "prod-eu" ]; then npm run build-prod-eu; fi
-        if [ "${_BUILD_ENV}" = "prod-cn" ]; then npm run build-prod-cn; fi
-        if [ -z "${_BUILD_ENV}" ]; then npm run build-test; fi
+        case "${_BUILD_ENV}" in
+          "test") npm run build-test ;;
+          "release") npm run build-release ;;
+          "staging") npm run build-staging ;;
+          "prod-beta") npm run build-beta ;;
+          "prod") npm run build-prod ;;
+          "prod-enterprise") npm run build-prod-enterprise ;;
+          "prod-in") npm run build-prod-in ;;
+          "prod-eu") npm run build-prod-eu ;;
+          "prod-cn") npm run build-prod-cn ;;
+          *) npm run build-test ;;  # Default
+        esac
 
-# Specify the available environment variables
+  # Step 3: Deploy to Firebase Hosting using the official Firebase CLI
+  - name: 'gcr.io/firebase/firebase-tools'  # Official Firebase CLI image
+    args:
+      - deploy
+      - --only
+      - hosting
+      - --project
+      - "${_FIREBASE_PROJECT_ID}"  # Use Firebase project ID
+
+# Define environment variables for substitutions
 substitutions:
-  _BUILD_ENV: 'test' # Default value, change as needed
+  _BUILD_ENV: 'test'  # Default environment, change as needed
+  _FIREBASE_PROJECT_ID: 'km-dev-434106'  # Replace with your actual Firebase project ID
 
-# Cache configuration (optional, remove if not needed)
+# Optional cache configuration
 # cache:
 #   paths:
 #     - 'node_modules/**'
