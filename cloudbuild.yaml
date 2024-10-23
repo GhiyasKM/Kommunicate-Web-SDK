@@ -6,7 +6,15 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
 
-  # Step 2: Build based on the provided environment variable
+  # Step 2: Load environment variables from .env file
+  - name: 'gcr.io/cloud-builders/bash'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        export $(cat .env | xargs)
+
+  # Step 3: Build based on the provided environment variable
   - name: 'gcr.io/cloud-builders/npm'
     entrypoint: 'bash'
     args:
@@ -33,6 +41,14 @@ steps:
         else 
           npm run build-test; 
         fi
+
+  # Step 4: Deploy to Firebase Hosting
+  - name: 'gcr.io/firebase-extensions/deploy-hosting'  # Firebase CLI for deployment
+    entrypoint: 'bash'
+    args: 
+      - '-c'
+      - |
+        firebase deploy --only hosting --token "$FIREBASE_TOKEN"
 
 # Specify the available environment variables
 substitutions:
