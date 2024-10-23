@@ -1,63 +1,44 @@
+options:
+  logging: 'CLOUD_LOGGING_ONLY'  # Use this to send logs to Cloud Logging only
+
 steps:
-  - name: 'node:14'  # Use the appropriate Node.js version
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo "Build env:" $BUILD_ENV
-        npm install
-        echo "NPM install completed" | gcloud logging write build-log --severity=INFO
+  # Step 1: Install dependencies
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
 
-  - name: 'node:14'
+  # Step 2: Build based on the provided environment variable
+  - name: 'gcr.io/cloud-builders/npm'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if [ "${BUILD_ENV}" = "test" ]; then 
+        if [ "${_BUILD_ENV}" = "test" ]; then 
           npm run build-test; 
-          echo "Build for test completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "release" ]; then 
+        elif [ "${_BUILD_ENV}" = "release" ]; then 
           npm run build-release; 
-          echo "Build for release completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "staging" ]; then 
+        elif [ "${_BUILD_ENV}" = "staging" ]; then 
           npm run build-staging; 
-          echo "Build for staging completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod" ]; then 
-          npm run build-prod; 
-          echo "Build for production completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod-enterprise" ]; then 
-          npm run build-prod-enterprise; 
-          echo "Build for prod-enterprise completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod-in" ]; then 
-          npm run build-prod-in; 
-          echo "Build for prod-in completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod-eu" ]; then 
-          npm run build-prod-eu; 
-          echo "Build for prod-eu completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod-cn" ]; then 
-          npm run build-prod-cn; 
-          echo "Build for prod-cn completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ "${BUILD_ENV}" = "prod_beta" ]; then 
+        elif [ "${_BUILD_ENV}" = "prod-beta" ]; then 
           npm run build-beta; 
-          echo "Build for beta completed" | gcloud logging write build-log --severity=INFO; 
-        fi
-        if [ -z "${BUILD_ENV}" ]; then 
+        elif [ "${_BUILD_ENV}" = "prod" ]; then 
+          npm run build-prod; 
+        elif [ "${_BUILD_ENV}" = "prod-enterprise" ]; then 
+          npm run build-prod-enterprise; 
+        elif [ "${_BUILD_ENV}" = "prod-in" ]; then 
+          npm run build-prod-in; 
+        elif [ "${_BUILD_ENV}" = "prod-eu" ]; then 
+          npm run build-prod-eu; 
+        elif [ "${_BUILD_ENV}" = "prod-cn" ]; then 
+          npm run build-prod-cn; 
+        else 
           npm run build-test; 
-          echo "Default build for test completed" | gcloud logging write build-log --severity=INFO; 
         fi
 
-# Optional: Define cache paths if needed
-cache:
-  paths:
-    - 'node_modules/**/*'
-    # - 'package-lock.json'
+# Specify the available environment variables
+substitutions:
+  _BUILD_ENV: 'test'  # Default value, change as needed
 
-timeout: 1200s  # Adjust the timeout as needed
+# Cache configuration (optional, remove if not needed)
+# cache:
+#   paths:
+#     - 'node_modules/**'
