@@ -10,7 +10,7 @@ steps:
     args: ['install']
 
   # Step 2: Login to Firebase using the service account key (like in the dummy file)
-  - name: 'gcr.io/$PROJECT_ID/gcloud'
+  - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
