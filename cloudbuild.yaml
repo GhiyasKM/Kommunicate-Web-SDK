@@ -9,7 +9,15 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
 
-  # Step 2: Conditionally run different builds based on _BUILD_ENV
+  # Step 2: Login to Firebase using the service account key (like in the dummy file)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo $_FIREBASE_TOKEN | firebase login:ci --no-localhost
+
+  # Step 3: Conditionally run different builds based on _BUILD_ENV
   - name: 'gcr.io/cloud-builders/npm'
     entrypoint: 'bash'
     args:
@@ -28,9 +36,7 @@ steps:
         else npm run build-test;
         fi
 
-  # Step 3: Deploy to Firebase Hosting
+  # Step 4: Deploy to Firebase Hosting
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args: ['deploy', '--only', 'hosting', '--token', '${_FIREBASE_TOKEN}']
 
-
-    
