@@ -9,13 +9,14 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
 
-  # Step 2: Login to Firebase using the service account key (like in the dummy file)
-  - name: 'gcr.io/cloud-builders/gcloud'
+  # Step 2: Install firebase-tools and login to Firebase using the service account key
+  - name: 'node:14'  # Use a Node.js image to install firebase-tools
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo $_FIREBASE_TOKEN | firebase login:ci --no-localhost
+        npm install -g firebase-tools   # Install Firebase CLI globally
+        echo $FIREBASE_TOKEN | firebase login:ci --no-localhost  # Use Firebase token to log in
 
   # Step 3: Conditionally run different builds based on _BUILD_ENV
   - name: 'gcr.io/cloud-builders/npm'
@@ -37,6 +38,10 @@ steps:
         fi
 
   # Step 4: Deploy to Firebase Hosting
-  - name: 'gcr.io/$PROJECT_ID/firebase'
-    args: ['deploy', '--only', 'hosting', '--token', '${_FIREBASE_TOKEN}']
-
+  - name: 'node:14'  # Again, use a Node.js image with firebase-tools
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        npm install -g firebase-tools  # Install Firebase CLI
+        firebase deploy --only hosting --token ${_FIREBASE_TOKEN}  # Deploy to Firebase
