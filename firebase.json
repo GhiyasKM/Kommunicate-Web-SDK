@@ -1,7 +1,7 @@
 {
   "hosting": {
     "site": "km-dev-434106-9a3b8",
-    "public": "public",
+    "public": "webplugin/template",
     "ignore": [
       "firebase.json",
       "**/.*",
