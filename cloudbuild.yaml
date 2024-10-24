@@ -1,7 +1,5 @@
 # cloudbuild working fine script 
 
-
-
 options:
   logging: CLOUD_LOGGING_ONLY  # This will send logs to Cloud Logging instead of a bucket.
 
@@ -33,8 +31,12 @@ steps:
         fi
 
   # Step 3: Deploy to Firebase Hosting
-  - name: 'gcr.io/$PROJECT_ID/firebase'
-    args: ['deploy', '--only', 'hosting', '--token', '${_FIREBASE_TOKEN}']
-
-
-    
+  - name: 'gcr.io/firebase'
+    args:
+      - 'deploy'
+      - '--only'
+      - 'hosting:km-dev-434106-9a3b8'
+      - '--token'
+      - '${_FIREBASE_TOKEN}'
+      - '--project'
+      - 'km-dev-434106'
