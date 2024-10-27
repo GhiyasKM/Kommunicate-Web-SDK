@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "${_FIREBASE_PROJECT_ID}",  
+    "site": "km-dev-434106",  
     "public": "webplugin/template",
     "ignore": [
       "firebase.json",
