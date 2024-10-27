@@ -36,7 +36,7 @@ steps:
     args:
       - 'deploy'
       - '--only'
-      - 'hosting:${_FIREBASE_PROJECT_ID}-9a3b8'
+      - 'hosting:${_FIREBASE_PROJECT_ID}'
       - '--token'
       - '${_FIREBASE_TOKEN}'
       - '--project'
