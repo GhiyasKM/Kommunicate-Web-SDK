@@ -10,19 +10,9 @@ steps:
   - name: 'gcr.io/cloud-builders/npm'
     args: ['install']
 
-  # Step 2: Generate .firebaserc file with dynamic project ID
-  - name: 'gcr.io/cloud-builders/bash'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        echo '{
-          "projects": {
-            "default": "'"${_FIREBASE_PROJECT_ID}"'"
-          }
-        }' > .firebaserc
+ 
 
-  # Step 3: Conditionally run different builds based on _BUILD_ENV
+  # Step 2: Conditionally run different builds based on _BUILD_ENV
   - name: 'gcr.io/cloud-builders/npm'
     entrypoint: 'bash'
     args:
@@ -41,7 +31,7 @@ steps:
         else npm run build-test;
         fi
 
-  # Step 4: Deploy to Firebase Hosting
+  # Step 3: Deploy to Firebase Hosting
   - name: 'gcr.io/$PROJECT_ID/firebase'
     args:
       - 'deploy'
